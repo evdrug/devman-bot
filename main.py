@@ -13,25 +13,33 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 DEVMAN_TOKEN = os.getenv('DEVMAN_TOKEN')
 
 bot = telegram.Bot(token=TELEGRAM_TOKEN)
-timestamp = [datetime.datetime.now().timestamp()]
+timestamp = datetime.datetime.now().timestamp()
+template_message = '''<i>Дата: {}</i>
+<b>{}</b>
+{}
+https://dvmn.org{}
+'''
 while True:
     try:
-        response = requests.get(f'https://dvmn.org/api/long_polling/?timestamp={int(timestamp[0])}',
+        response = requests.get(f'https://dvmn.org/api/long_polling/', params={'timestamp': int(timestamp)},
                                 headers={'Authorization': f'Token {DEVMAN_TOKEN}'},
-                                timeout=100)
+                                timeout=10)
         response.raise_for_status()
         for solution in response.json().get('new_attempts', []):
             date = datetime.datetime.fromtimestamp(solution['timestamp'])
             status = '\u2757\ufe0f Надо потрудиться :(' if solution['is_negative'] else '\u2705 Работа принята'
-            text = f"<i>Дата: {date.strftime('%d-%m-%Y %H:%M')}</i>\n" \
-                   f"<b>{status}</b>\n" \
-                   f"{solution['lesson_title']}\n" \
-                   f"https://dvmn.org{solution['lesson_url']}"
-            bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=text, parse_mode='HTML')
-        timestamp[0] = (response.json().get('timestamp_to_request') or response.json().get(
-            'last_attempt_timestamp')) + 1
+
+            message = template_message.format(
+                date.strftime('%d-%m-%Y %H:%M'),
+                status,
+                solution['lesson_title'],
+                solution['lesson_url']
+            )
+
+            bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message, parse_mode='HTML')
+        timestamp = (response.json().get('timestamp_to_request') or response.json().get('last_attempt_timestamp')) + 1
     except requests.exceptions.ReadTimeout:
-        timestamp[0] = datetime.datetime.now().timestamp() - 1
+        pass
     except requests.exceptions.ConnectionError:
-        print('Error connection')
+        print('Connection error')
         time.sleep(10)
