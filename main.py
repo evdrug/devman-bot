@@ -21,13 +21,18 @@ https://dvmn.org{}
 '''
 while True:
     try:
-        response = requests.get(f'https://dvmn.org/api/long_polling/', params={'timestamp': int(timestamp)},
-                                headers={'Authorization': f'Token {DEVMAN_TOKEN}'},
+        response = requests.get(f'https://dvmn.org/api/long_polling/',
+                                params={'timestamp': timestamp},
+                                headers={
+                                    'Authorization': f'Token {DEVMAN_TOKEN}'},
                                 timeout=10)
         response.raise_for_status()
-        for solution in response.json().get('new_attempts', []):
+        response_body = response.json()
+        for solution in response_body.get('new_attempts', []):
             date = datetime.datetime.fromtimestamp(solution['timestamp'])
-            status = '\u2757\ufe0f Надо потрудиться :(' if solution['is_negative'] else '\u2705 Работа принята'
+            status = ('\u2757\ufe0f Надо потрудиться :('
+                      if solution['is_negative']
+                      else '\u2705 Работа принята')
 
             message = template_message.format(
                 date.strftime('%d-%m-%Y %H:%M'),
@@ -36,8 +41,13 @@ while True:
                 solution['lesson_url']
             )
 
-            bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message, parse_mode='HTML')
-        timestamp = (response.json().get('timestamp_to_request') or response.json().get('last_attempt_timestamp')) + 1
+            bot.send_message(chat_id=TELEGRAM_CHAT_ID,
+                             text=message,
+                             parse_mode='HTML')
+        print(response_body)
+        timestamp = response_body.get(
+            'timestamp_to_request') or response_body.get(
+            'last_attempt_timestamp')
     except requests.exceptions.ReadTimeout:
         pass
     except requests.exceptions.ConnectionError:
