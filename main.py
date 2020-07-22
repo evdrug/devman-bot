@@ -44,7 +44,7 @@ while True:
             bot.send_message(chat_id=TELEGRAM_CHAT_ID,
                              text=message,
                              parse_mode='HTML')
-        print(response_body)
+
         timestamp = response_body.get(
             'timestamp_to_request') or response_body.get(
             'last_attempt_timestamp')
