@@ -46,7 +46,6 @@ if __name__ == '__main__':
     logger.info('\u2705 Бот запущен')
     while True:
         try:
-            print(0/0)
             response = requests.get(f'https://dvmn.org/api/long_polling/',
                                     params={'timestamp': timestamp},
                                     headers={
