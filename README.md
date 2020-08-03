@@ -23,6 +23,22 @@
 
     python main.py
 
+## Размещение на Heroku
+
+1. Создаем [новое](https://dashboard.heroku.com/new-app) приложение
+
+2. Переходим в `Deploy`, подключаем репозиторий github
+
+3. Нажимаем `Deploy Branch`
+
+4. Устанавливаем и авторизовываемся в [heroku-cli](https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
+
+5. Прописываем переменные из `.env.example` в Settings -> Config Vars
+
+6. Выполняем
+```
+heroku ps:scale bot=1 -a Имя_приложения
+```
 
 ### Цель проекта
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](https://dvmn.org).
