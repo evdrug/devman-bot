@@ -1,5 +1,5 @@
 # Devman-Bot
-Отправляем уведомления о проверке работ 
+Отправляем уведомления о проверке работ.
 
 ## Как установить
     
@@ -25,17 +25,17 @@
 
 ## Размещение на Heroku
 
-1. Создаем [новое](https://dashboard.heroku.com/new-app) приложение
+1. Создаем [новое](https://dashboard.heroku.com/new-app) приложение.
 
-2. Переходим в `Deploy`, подключаем репозиторий github
+2. Переходим в `Deploy`, подключаем репозиторий github.
 
-3. Нажимаем `Deploy Branch`
+3. Нажимаем `Deploy Branch`.
 
-4. Устанавливаем и авторизовываемся в [heroku-cli](https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
+4. Устанавливаем и авторизовываемся в [heroku-cli](https://devcenter.heroku.com/articles/heroku-cli#download-and-install).
 
-5. Прописываем переменные из `.env.example` в Settings -> Config Vars
+5. Прописываем переменные из `.env.example` в `Settings` -> `Config Vars`.
 
-6. Выполняем
+6. Выполняем:
 ```
 heroku ps:scale bot=1 -a Имя_приложения
 ```

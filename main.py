@@ -8,6 +8,7 @@ import telegram
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger("bot")
 
 
 class TelegramLogsHandler(logging.Handler):
@@ -19,7 +20,6 @@ class TelegramLogsHandler(logging.Handler):
         self.bot = telegram.Bot(token=self.telegram_token)
 
     def emit(self, record):
-
         log_entry = self.format(record)
         self.bot.send_message(chat_id=self.telegram_chat_id,
                               text=log_entry,
@@ -37,7 +37,6 @@ if __name__ == '__main__':
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    logger = logging.getLogger("bot")
     logger.setLevel(logging.INFO)
     logger.addHandler(TelegramLogsHandler())
 
@@ -79,5 +78,5 @@ if __name__ == '__main__':
             time.sleep(10)
         except Exception as e:
             logger.exception(e)
-            time.sleep(10*interval)
+            time.sleep(10 * interval)
             interval += 1
